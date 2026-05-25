@@ -10,7 +10,7 @@ import {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(__dirname, 'dist');
-const SITE_URL = 'https://roman-numerals.pages.dev';
+const SITE_URL = 'https://romannumeral.pages.dev';
 const TODAY = new Date().toISOString().split('T')[0];
 
 // ─── SETUP ───────────────────────────────────────────────────────────────────
@@ -233,14 +233,40 @@ ${allUrls.map(u => `  <url>
 </urlset>`;
 write(path.join(DIST, 'sitemap.xml'), sitemap);
 
-// ─── CLOUDFLARE PAGES ROUTING ─────────────────────────────────────────────────
-// _redirects for clean URLs (no .html extension)
-const redirectLines = [];
-// Cloudflare Pages serves .html files at clean URLs automatically, but we add
-// a _headers file for cache control
+// ─── LLMS.TXT ────────────────────────────────────────────────────────────────
+console.log('Generating llms.txt and og-image...');
+const llmsTxt = `# Roman Numerals Reference
+
+> A complete static reference for Roman numerals 1 to 3999. Every number has its own dedicated page.
+
+## Contents
+
+- /[number] — decimal to Roman (e.g. /1994 = MCMXCIV)
+- /roman/[ROMAN] — reverse lookup (e.g. /roman/MCMXCIV = 1994)
+- /chart/1-100, /chart/100-1000, /chart/1000-3999, /chart/years, /chart/months, /chart/multiplication
+- /how-it-works — system explainer
+- /extended — vinculum notation for numbers above 3999
+
+## Rules
+
+Symbols: I=1 V=5 X=10 L=50 C=100 D=500 M=1000
+Subtractive pairs: IV=4 IX=9 XL=40 XC=90 CD=400 CM=900
+Range: 1 to 3999
+
+## Sitemap
+${SITE_URL}/sitemap.xml
+`;
+write(path.join(DIST, 'llms.txt'), llmsTxt);
+
+const ogSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630"><rect width="1200" height="630" fill="#FAFAF7"/><rect x="0" y="0" width="8" height="630" fill="#8B2E2E"/><text x="80" y="280" font-family="Georgia, serif" font-size="110" font-weight="500" fill="#1A1A1A" letter-spacing="8">MMXXVI</text><text x="80" y="360" font-family="Georgia, serif" font-size="44" fill="#8A8A86">Roman Numerals Reference</text><text x="80" y="420" font-family="Georgia, serif" font-size="26" fill="#8B2E2E">romannumeral.pages.dev</text></svg>`;
+write(path.join(DIST, 'og-image.svg'), ogSvg);
+
+// ─── CLOUDFLARE HEADERS ───────────────────────────────────────────────────────
 const headers = `/*
   Cache-Control: public, max-age=86400
 /sitemap.xml
+  Cache-Control: public, max-age=3600
+/llms.txt
   Cache-Control: public, max-age=3600
 `;
 write(path.join(DIST, '_headers'), headers);

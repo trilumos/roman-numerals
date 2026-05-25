@@ -1,9 +1,10 @@
 // template.js — returns HTML strings for each page type
 
-const SITE_URL = 'https://roman-numerals.pages.dev';
+const SITE_URL = 'https://romannumeral.pages.dev';
 const SITE_NAME = 'Roman Numerals';
 
 export function buildPage({ title, description, canonical, schema, body, css, clientJs }) {
+  const ogImage = `${SITE_URL}/og-image.svg`;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,6 +15,19 @@ export function buildPage({ title, description, canonical, schema, body, css, cl
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="${canonical}">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="${canonical}">
+<meta property="og:title" content="${escHtml(title)}">
+<meta property="og:description" content="${escHtml(description)}">
+<meta property="og:image" content="${ogImage}">
+<meta property="og:site_name" content="Roman Numerals">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="${escHtml(title)}">
+<meta name="twitter:description" content="${escHtml(description)}">
+<meta name="twitter:image" content="${ogImage}">
 <style>${css}</style>
 <script type="application/ld+json">${schema}</script>
 </head>
@@ -59,11 +73,11 @@ function footerHtml() {
 
 function converterWidget(defaultDecimal, defaultRoman) {
   return `<div class="converter-card">
-  <div class="converter-title">Convert any number</div>
+  <div class="converter-title">Convert any number &mdash; 1 to 3,999,999</div>
   <div class="converter-fields">
     <div class="converter-field">
       <label>Decimal</label>
-      <input type="text" data-input="decimal" value="${defaultDecimal}" placeholder="e.g. 1994" inputmode="numeric" maxlength="4">
+      <input type="text" data-input="decimal" value="${defaultDecimal}" placeholder="e.g. 1994" inputmode="numeric" maxlength="7">
     </div>
     <button class="swap-btn" title="Swap fields" aria-label="Swap">&#8597;</button>
     <div class="converter-field">
@@ -72,6 +86,7 @@ function converterWidget(defaultDecimal, defaultRoman) {
     </div>
   </div>
   <div class="converter-error"></div>
+  <div class="extended-note" style="display:none"></div>
 </div>`;
 }
 
@@ -121,6 +136,14 @@ export function numberPage({ n, roman, breakdown, nearby, aboutText, chartRange 
           "name": `How is ${n} formed in Roman numerals?`,
           "acceptedAnswer": { "@type": "Answer", "text": `${n} (${roman}) is formed by: ${breakdown.map(b => `${b.symbol} = ${b.value}`).join(', ')}.` }
         }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL + "/" },
+        { "@type": "ListItem", "position": 2, "name": `${n} in Roman Numerals`, "item": `${SITE_URL}/${n}` }
       ]
     }
   ]);

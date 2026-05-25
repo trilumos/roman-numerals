@@ -641,3 +641,45 @@ footer {
 @media (max-width: 420px) {
   .nearby-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* EXTENDED NOTE PANEL */
+.extended-note {
+  margin-top: 16px;
+  padding: 16px;
+  background: #FDF6F0;
+  border: 1px solid #E8D5C4;
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+}
+
+.ext-result {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.ext-explain {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.ext-explain strong {
+  color: var(--ink);
+}
+
+.ext-explain a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.ext-explain a:hover {
+  text-decoration: underline;
+}
